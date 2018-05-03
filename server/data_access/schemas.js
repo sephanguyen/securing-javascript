@@ -144,7 +144,7 @@ LoginsSchema.static("canAuthenticate", async function(key) {
 LoginsSchema.static('failedLoginAttempt', async function(key) {
     const query = {identityKey: key};
     const update = {$inc: {failedAttempts: 1}, timeout: new Date()};
-    const options = {setDefaultsOnInsert: true, upsert: true};
+    const options = {setDefaultsOnInsert: true, upsert: true, inProgress: false};
     return await this.findOneAndUpdate(query, update, options).exec();
 });
 
@@ -155,4 +155,12 @@ LoginsSchema.static('successfullLoginAttempt', async function(key) {
     }
 });
 
+LoginsSchema.static("inProgress", async function(key) {
+    const login = await this.findOne({identityKey: key});
+    const query = {identityKey: key};
+    const update = {inProgress: true};
+    const options = {setDefaultsOnInsert: true, upsert: true};
+    await this.findOneAndUpdate(query, update, options).exec();
+    return (login && login.inProgress);
+});
 export {LoginsSchema as LoginsSchema}

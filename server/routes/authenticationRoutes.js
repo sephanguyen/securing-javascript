@@ -88,6 +88,10 @@ authenticationRouter.route("/api/user/login")
             const identityKey = `${email}-${clientIp}`;
             const Login = await getLoginsModel();
 
+            if(await Login.inProgress(identityKey)){
+                return delayResponse(() => res.status(500).send('Login already in progress.'));
+            }
+
             if(!await Login.canAuthenticate(identityKey)) {
                 return delayResponse(() => res.status(500).send("The account is temporarily locked out."));
             }
