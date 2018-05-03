@@ -86,13 +86,13 @@ authenticationRouter.route("/api/user/login")
             }
 
             const identityKey = `${email}-${clientIp}`;
-            const Login = await getLoginsModel();
+            const Logins = await getLoginsModel();
 
-            if(await Login.inProgress(identityKey)){
+            if(await Logins.inProgress(identityKey)){
                 return delayResponse(() => res.status(500).send('Login already in progress.'));
             }
 
-            if(!await Login.canAuthenticate(identityKey)) {
+            if(!await Logins.canAuthenticate(identityKey)) {
                 return delayResponse(() => res.status(500).send("The account is temporarily locked out."));
             }
 
@@ -107,7 +107,7 @@ authenticationRouter.route("/api/user/login")
                 };
 
                 req.session.login(userInfo);
-                await Logins.successfulLoginAttempt(identityKey);
+                await Logins.successfullLoginAttempt(identityKey);
 
                 return delayResponse(() =>  res.status(200).json({
                     firstName: existingUser.firstName,

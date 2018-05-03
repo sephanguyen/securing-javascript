@@ -14,13 +14,17 @@ export default function sessionManagementConfig(app){
 
     app.use(session({
         store: new MongoStore({
-            dbPromise: connectionProvider(serverSettings.serverUrl, serverSettings.database)
+            dbPromise: connectionProvider(serverSettings.serverUrl, serverSettings.database),
+            ttl: (1 * 60 * 60)
         }),
         secret: serverSettings.session.password,
         saveUninitialized: true,
         resave: false,
         cookie: {
             path: "/",
+            httpOnly: false,
+            secure: false,
+            maxAge: 1 * 60 * 60 * 1000
         }
     }));
 }
