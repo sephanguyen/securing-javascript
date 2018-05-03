@@ -31,7 +31,7 @@ export default function sessionManagementConfig(app){
         cookie: {
             path: "/",
             httpOnly: true,
-            secure: false,
+            secure: true,
             maxAge: 1 * 60 * 60 * 1000
         }
     }));
