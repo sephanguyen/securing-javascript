@@ -30,7 +30,7 @@ export default function sessionManagementConfig(app){
         resave: false,
         cookie: {
             path: "/",
-            httpOnly: false,
+            httpOnly: true,
             secure: false,
             maxAge: 1 * 60 * 60 * 1000
         }
