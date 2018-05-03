@@ -6,8 +6,16 @@ import mongoStoreFactory            from "connect-mongo";
 
 export default function sessionManagementConfig(app){
 
-    session.Session.prototype.login = function(user){
-        this.userInfo = user;
+    session.Session.prototype.login = function(user, cb){
+        const req = this.req;
+        req.session.regenerate(function(err){
+            if(err) {
+                cb(err);
+            }
+        })
+        //this.userInfo = user;
+        req.session.userInfo = user;
+        cb();
     };
 
     const MongoStore = mongoStoreFactory(session);
