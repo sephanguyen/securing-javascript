@@ -20,3 +20,14 @@ export const registrationSchema = {
             errorMessage: "Invalid password"
         }
 };
+
+
+
+export const loginSchema = {
+    "email": {
+        notEmpty: true,
+        isEmail: {
+            errorMessage: "Invalid Email"
+        }
+    }
+};

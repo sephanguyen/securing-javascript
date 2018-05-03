@@ -8,10 +8,10 @@
 
 import {Router}                     from "express";
 import cors                         from "cors";
-import {getUserModel}               from "../data_access/modelFactory";
+import {getUserModel, getLoginsModel}               from "../data_access/modelFactory";
 import colors                       from "colors";
 import Promise                      from "bluebird";
-import {registrationSchema}         from "../validation/validationSchemas";
+import {registrationSchema, loginSchema}         from "../validation/validationSchemas";
 
 const authenticationRouter = Router();
 
@@ -66,14 +66,31 @@ authenticationRouter.route("/api/user/register")
 
 authenticationRouter.route("/api/user/login")
     .post(cors(), async function (req, res) {
-        const delayReponse = response => {
+        const delayResponse = response => {
             setTimeout(() => {
                 response();
             }, 1000);
-        }
+        };
+
         try {
             const User = await getUserModel();
+
+            const {clientIp} = req;
             const {email, password} = req.body;
+
+            req.checkBody(loginSchema);
+            const errors = req.validationErrors();
+
+            if (errors) {
+                return delayResponse(() => res.status(401).send("Invalid username or password"));
+            }
+
+            const identityKey = `${email}-${clientIp}`;
+            const Login = await getLoginsModel();
+
+            if(!await Login.canAuthenticate(identityKey)) {
+                return delayResponse(() => res.status(500).send("The account is temporarily locked out."));
+            }
 
             const existingUser = await User.findOne({username: email}).exec();
 
@@ -86,19 +103,21 @@ authenticationRouter.route("/api/user/login")
                 };
 
                 req.session.login(userInfo);
+                await Logins.successfulLoginAttempt(identityKey);
 
-               return delayReponse(() =>  res.status(200).json({
+                return delayResponse(() =>  res.status(200).json({
                     firstName: existingUser.firstName,
                     lastName: existingUser.lastName,
                     username: existingUser.email
                 }));
             } else {
-                return delayReponse(() => res.status(401).send("Invalid username or password"));
+                await Logins.failedLoginAttempt(identityKey);
+                return delayResponse(() => res.status(401).send("Invalid username or password"));
             }
         }
         catch (err) {
             console.log(err);
-            return delayReponse(() => res.status(500).send("There was an error attempting to login. Please try again later."));
+            return delayResponse(() => res.status(500).send("There was an error attempting to login. Please try again later."));
         }
     });
 
