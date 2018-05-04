@@ -49,8 +49,16 @@ export const TimelineItemSchema = new Schema({
 });
 
 const UserSchema = new Schema({
-    firstName: String,
-    lastName: String,
+    firstName: {
+        type: String,
+        match: /^[a-z ,.'-]+/,
+        maxLength: 200
+    },
+    lastName: {
+        type: String,
+        match: /^[a-z ,.'-]+/,
+        maxLength: 200
+    },
     username: {
         type: String,
         index: {

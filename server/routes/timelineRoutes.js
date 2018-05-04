@@ -10,6 +10,7 @@ import React                         from "react";
 import {Router}                      from "express";
 import {getTimelineItemModel}        from "../data_access/modelFactory";
 import colors                        from "colors";
+import {timelineRangeSchema}         from "../validation/validationSchemas";
 
 const timelineRouter = Router();
 
@@ -20,6 +21,14 @@ timelineRouter.route("/api/timeline(/:id/)?")
             const {startDate, endDate} = req.query;
             const query = {};
             if (startDate && endDate) {
+                
+                req.checkQuery(timelineRangeSchema);
+                const errors = req.validationErrors();
+
+                if(errors) {
+                    return res.status(500).json(errors);
+                }
+
                 query["start"] = {$gte: startDate};
                 query["end"] = {$lte: endDate};
             }

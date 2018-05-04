@@ -20,13 +20,6 @@ authenticationRouter.route("/api/user/register")
         try {
             const User = await getUserModel();
 
-            req.checkBody(registrationSchema);
-            const errors = req.validationErrors();
-
-            if (errors) {
-                return res.status(500).json(errors);
-            }
-
             const {email, password, firstName, lastName} = req.body;
             const existingUser = await User.findOne({username: email}).exec();
             if (existingUser) {

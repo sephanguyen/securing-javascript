@@ -18,6 +18,28 @@ export const registrationSchema = {
                 errorMessage: "Password must be alphanumeric."
             },
             errorMessage: "Invalid password"
+        },
+        "firstName": {
+            notEmpty: false,
+            isLength: {
+                options: [{ max: 200}],
+                errorMessage: "The first name must be under 200 characters"
+            },
+            matches: {
+                options: ["^[a-z ,.'-]+$", "i"],
+                errorMessage: "The first name can only containt letters and characters (.,'-)"
+            }
+        },
+        "lastName": {
+            notEmpty: false,
+            isLength: {
+                options: [{ max: 200}],
+                errorMessage: "The las name must be under 200 characters"
+            },
+            matches: {
+                options: ["^[a-z ,.'-]+$", "i"],
+                errorMessage: "The last name can only containt letters and characters (.,'-)"
+            }
         }
 };
 
@@ -31,3 +53,14 @@ export const loginSchema = {
         }
     }
 };
+
+export const timelineRangeSchema = {
+    "startDate": {
+        isDate: true,
+        notEmpty: false
+    },
+    "endDate": {
+        isDate: true,
+        notEmpty: false
+    }
+}
