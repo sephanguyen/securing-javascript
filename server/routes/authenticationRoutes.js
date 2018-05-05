@@ -96,7 +96,9 @@ authenticationRouter.route("/api/user/login")
                     _id: existingUser._id,
                     firstName: existingUser.firstName,
                     lastName: existingUser.lastName,
-                    username: existingUser.email
+                    username: existingUser.email,
+                    roles: existingUser.roles
+
                 };
 
                 req.session.login(userInfo);

@@ -80,6 +80,10 @@ const UserSchema = new Schema({
         type: Date,
         required: true,
         default: new Date()
+    },
+    roles: {
+        type: Array,
+        default: ["user"]
     }
 });
 
