@@ -66,7 +66,7 @@ apiRouteConfig(app);
 
 initialize()
     .then(function () {
-        insecureApp.listen(insecurePort, function (err) {
+        app.listen(insecurePort, function (err) {
             if (err) {
                 console.log(err);
             } else {
@@ -74,9 +74,8 @@ initialize()
                 open(`http://localhost:${insecurePort}`);
             }
         });
-        https.createServer(options, app).listen(443);
-})
-    .catch(function (err) {
+        https.createServer(options, app).listen(1024);
+}).catch(function (err) {
         console.log(err);
     });
 

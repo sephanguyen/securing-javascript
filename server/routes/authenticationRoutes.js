@@ -101,7 +101,11 @@ authenticationRouter.route("/api/user/login")
 
                 };
 
-                req.session.login(userInfo);
+                req.session.login(userInfo, function(err) {
+                    if (err) {
+                        return res.status(500).send("There was an error logging in. Please try again later.");
+                    }
+                });
                 await Logins.successfullLoginAttempt(identityKey);
 
                 return delayResponse(() =>  res.status(200).json({
