@@ -12,16 +12,26 @@ import apiRouteConfig               from "./configurations/apiRoutesConfig";
 import validationSchemaConfig       from "./configurations/validationSchemaConfig";
 import staticResourcesConfig        from "./configurations/staticResourcesConfig";
 import reponseHeaderConfig          from "./configurations/reponseHeaderConfig";
+import redirectRequest              from "./configurations/redirectRequest";
+
 import webpackConfig                from "../webpack.config.dev.js";
 import open                         from "open";
 import path                         from "path";
 import React                        from "react";
 import expressValidator             from "express-validator";
+import fs                           from "fs";
+import https                        from "https";
 
-const port = 7000;
+const insecurePort = 7000;
 const app = express();
 const compiler = webpack(webpackConfig);
+const insecureApp = express();
+const options = {
+    key: fs.readFileSync("server/data/hackershall.key"),
+    cert: fs.readFileSync("server/data/hackershall.crt")
+}
 
+redirectRequest(insecureApp);
 sessionManagementConfig(app);
 staticResourcesConfig(app);
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -29,6 +39,7 @@ app.use(expressValidator());
 app.use(bodyParser.json());
 validationSchemaConfig(app);
 reponseHeaderConfig(app);
+
 
 app.use("/fonts/", express.static(path.join(__dirname, "./shared/assets/fonts")));
 app.use(function(req, res, next) {
@@ -55,14 +66,15 @@ apiRouteConfig(app);
 
 initialize()
     .then(function () {
-        app.listen(port, function (err) {
+        insecureApp.listen(insecurePort, function (err) {
             if (err) {
                 console.log(err);
             } else {
-                console.log(`Express server listening at http://localhost:${port}`);
-                open(`http://localhost:${port}`);
+                console.log(`Express server listening at http://localhost:${insecurePort}`);
+                open(`http://localhost:${insecurePort}`);
             }
         });
+        https.createServer(options, app).listen(443);
 })
     .catch(function (err) {
         console.log(err);
