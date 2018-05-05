@@ -56,7 +56,7 @@ export default {
     module: {
         loaders: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx)$/,
                 include: [path.join(__dirname, "shared"), path.join(__dirname, "src")],
                 exclude: /node_module/,
                 loader: "babel",

@@ -2,7 +2,7 @@
 /* eslint-disable no-console */
 
 require("../shared/lib/extensions");
-import express, {Router}            from "express";
+import express           from "express";
 import favicon                      from "serve-favicon";
 import bodyParser                   from "body-parser";
 import {initialize}                 from "./initializationTasks";
@@ -17,7 +17,6 @@ import redirectRequest              from "./configurations/redirectRequest";
 import webpackConfig                from "../webpack.config.dev.js";
 import open                         from "open";
 import path                         from "path";
-import React                        from "react";
 import expressValidator             from "express-validator";
 import fs                           from "fs";
 import https                        from "https";
