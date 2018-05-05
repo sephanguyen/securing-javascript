@@ -10,7 +10,8 @@ import webpack                      from "webpack";
 import sessionManagementConfig      from "./configurations/sessionsManagementConfig";
 import apiRouteConfig               from "./configurations/apiRoutesConfig";
 import validationSchemaConfig       from "./configurations/validationSchemaConfig";
-import staticResourcesConfig       from "./configurations/staticResourcesConfig";
+import staticResourcesConfig        from "./configurations/staticResourcesConfig";
+import reponseHeaderConfig          from "./configurations/reponseHeaderConfig";
 import webpackConfig                from "../webpack.config.dev.js";
 import open                         from "open";
 import path                         from "path";
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 app.use(bodyParser.json());
 validationSchemaConfig(app);
+reponseHeaderConfig(app);
 
 app.use("/fonts/", express.static(path.join(__dirname, "./shared/assets/fonts")));
 app.use(function(req, res, next) {
