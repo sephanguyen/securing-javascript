@@ -32,7 +32,8 @@ export default function sessionManagementConfig(app){
             path: "/",
             httpOnly: true,
             secure: true,
-            maxAge: 1 * 60 * 60 * 1000
+            maxAge: 1 * 60 * 60 * 1000,
+            sameSite: true 
         }
     }));
 }

@@ -3,7 +3,7 @@
 import {Router}                                 from "express";
 import { getUserModel }                         from "../data_access/modelFactory";
 import RBAC                                     from "../data_access/rbac";
-
+import xssFilter                                from "xss-filters";
 const adminRouter = Router();
 const rbac = new RBAC();
 
@@ -33,10 +33,20 @@ adminRouter.route("/api/admin/users")
 
             const users = await User.find({}, "firstName lastName email created", {skip: skip, limit: 50}) || [];
 
+            const encodeUsers = users.map(user => {
+                return {
+                    firstName: xssFilter.inHTMLData(user.firstName),
+                    lastName: xssFilter.inHTMLData(user.lastName),
+                    displayName: xssFilter.inHTMLData(user.displayName),
+                    email: user.email,
+                    created: user.created
+                }
+            });
             return res.json({
-                users,
+                users : encodeUsers,
                 totalPages
             });
+
         } catch (err) {
             return res.status(500).send("There was an error retrieving the list of users");
         }

@@ -52,7 +52,8 @@
     "serve-favicon": "2.3.0",
     "toastr": "2.1.2",
     "underscore": "1.8.3",
-    "vis": "4.15.1"
+    "vis": "4.15.1",
+    "xss-filters": "^1.2.7"
   },
   "devDependencies": {
     "autoprefixer": "6.3.6",
